@@ -1,0 +1,24 @@
+# --- Python artifacts ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE/editor
+.vscode/
+.idea/
+
+# --- Project-specific data and outputs ---
+
+# Ignore everything under data/raw and data/processed
+data/raw/
+data/processed/
+
+# Ignore everything under outputs (figures, json, etc.)
+outputs/
