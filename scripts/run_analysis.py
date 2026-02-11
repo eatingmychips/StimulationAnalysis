@@ -44,15 +44,15 @@ def main():
 
     # Antenna plots
     antenna_time_plot_single(body_angles, 30, "Angular Deviation (degrees)")
-    antenna_time_plot(body_angles, FREQUENCIES, "Angular Deviation (degrees)")
-    antenna_trials_plot(body_angles, FREQUENCIES, "Angular Deviation (degrees)")
-    frequency_plot(angles_max, FREQUENCIES, "Angular Deviation (degrees)")
+    antenna_time_plot(body_angles, FREQUENCIES, "Angular Deviation (degrees)", save=True)
+    antenna_trials_plot(body_angles, FREQUENCIES, "Angular Deviation (degrees)", save=True)
+    frequency_plot(angles_max, FREQUENCIES, "Angular Deviation (degrees)", save=True)
 
     # Elytra plots
     elytra_time_plot_single(forward_velocity, 30, "Forward Velocity (mm/s)")
-    elytra_time_plot(forward_velocity, FREQUENCIES, "Forward Velocity (mm/s)")
-    elytra_trials_plot(forward_velocity, FREQUENCIES, "Forward Velocity (mm/s)")
-    frequency_plot_elytra(fwd_max, FREQUENCIES, "Forward Velocity (mm/s)")
+    elytra_time_plot(forward_velocity, FREQUENCIES, "Forward Velocity (mm/s)", save=True)
+    elytra_trials_plot(forward_velocity, FREQUENCIES, "Forward Velocity (mm/s)", save=True)
+    frequency_plot_elytra(fwd_max, FREQUENCIES, "Forward Velocity (mm/s)", save=True)
 
 if __name__ == "__main__":
     main()

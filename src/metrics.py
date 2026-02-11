@@ -97,11 +97,11 @@ def turning_fail(angles, key):
     angles = angles[int(0.15/1.15*len(angles)):int(0.65/1.15*len(angles))]
 
     if key[0] == "Right": 
-        if min(angles) > -3: 
+        if min(angles) > -5: 
             return True
 
     if key[0] == "Left": 
-        if max(angles) < 3:
+        if max(angles) < 5:
             return True
 
     return False
@@ -110,7 +110,7 @@ def turning_fail(angles, key):
 def elytra_fail(fwd_vel, key): 
     fwd_vel = fwd_vel[int(0.15/1.15*len(fwd_vel)):int(0.65/1.15*len(fwd_vel))]
     if key[0] == "Both": 
-        if max(fwd_vel) < 3: 
+        if max(fwd_vel) < 5: 
             return True 
         
     return False
