@@ -16,9 +16,16 @@ venv/
 
 # --- Project-specific data and outputs ---
 
-# Ignore everything under data/raw and data/processed
-data/raw/
-data/processed/
+# Ignore everything in these dirs
+data/raw/*
+data/processed/*
+outputs/*
+outputs/figures/*
+outputs/json/*
 
-# Ignore everything under outputs (figures, json, etc.)
-outputs/
+# But allow the placeholder files
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!outputs/.gitkeep
+!outputs/figures/.gitkeep
+!outputs/json/.gitkeep
