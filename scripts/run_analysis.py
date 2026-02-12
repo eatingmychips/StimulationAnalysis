@@ -32,24 +32,32 @@ def main():
     outputs_dir = Path("outputs/json")
     outputs_dir.mkdir(parents=True, exist_ok=True)
 
+
+    print("Number of Turning trials is: ", summary["turning_succ_no"])
+    print("Success Turning is: ", summary["turning_succ_no"] / (summary["turning_succ_no"] + summary["turning_fail_no"]))
+
+    print("Number of forward trials is: ", summary["elytra_succ_no"])
+    print("Success Forward is: ", summary["elytra_succ_no"] / (summary["elytra_succ_no"] + summary["elytra_fail_no"]))
+
+
     lateral_max, fwd_max, angles_max, ang_vel_max = get_max_values(
         lateral_velocity, forward_velocity, body_angles, angular_velocity
     )
 
-    with open(outputs_dir / "angles_max_vert.json", "w") as f:
+    with open(outputs_dir / "angles_max_vert_Acrylic.json", "w") as f:
         json.dump({str(k): v for k, v in angles_max.items()}, f)
 
-    with open(outputs_dir / "fwd_max_vert.json", "w") as f:
+    with open(outputs_dir / "fwd_max_vert_Acrylic.json", "w") as f:
         json.dump({str(k): v for k, v in fwd_max.items()}, f)
 
     # Antenna plots
-    antenna_time_plot_single(body_angles, 30, "Angular Deviation (degrees)")
+    antenna_time_plot_single(body_angles, 20, "Angular Deviation (degrees)", save=True)
     antenna_time_plot(body_angles, FREQUENCIES, "Angular Deviation (degrees)", save=True)
     antenna_trials_plot(body_angles, FREQUENCIES, "Angular Deviation (degrees)", save=True)
     frequency_plot(angles_max, FREQUENCIES, "Angular Deviation (degrees)", save=True)
 
     # Elytra plots
-    elytra_time_plot_single(forward_velocity, 30, "Forward Velocity (mm/s)")
+    elytra_time_plot_single(forward_velocity, 20, "Forward Velocity (mm/s)", save=True)
     elytra_time_plot(forward_velocity, FREQUENCIES, "Forward Velocity (mm/s)", save=True)
     elytra_trials_plot(forward_velocity, FREQUENCIES, "Forward Velocity (mm/s)", save=True)
     frequency_plot_elytra(fwd_max, FREQUENCIES, "Forward Velocity (mm/s)", save=True)

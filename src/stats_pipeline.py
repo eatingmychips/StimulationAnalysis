@@ -47,17 +47,19 @@ def run_stat_analysis(files):
                 for dct in (lateral_velocity, forward_velocity, body_angles, angular_velocity):
                     dct.setdefault(key, [])
 
-                # if turning_fail(body_angle, key):
-                #     turning_success_freq[key[1]].append(0)
-                #     turning_fail_no += 1
-                #     continue
+                if turning_fail(body_angle, key):
+                    turning_success_freq[key[1]].append(0)
+                    turning_fail_no += 1
+                    continue
 
                 if trial_is_outlier(body_angle, in_line_vel, key):
                     continue
 
-                # if elytra_fail(in_line_vel, key):
-                #     elytra_success_freq[key[1]].append(0)
-                #     elytra_fail_no += 1
+                if elytra_fail(in_line_vel, key):
+                    elytra_success_freq[key[1]].append(0)
+                    elytra_fail_no += 1
+                    continue 
+
 
                 lateral_velocity[key].append(transv_vel)
                 forward_velocity[key].append(in_line_vel)

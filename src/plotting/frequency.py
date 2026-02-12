@@ -25,7 +25,7 @@ def get_max_values(lateral_vel, fwd_vel, body_angle, ang_vel):
     for unit, dict in zip(all_measures, max_induced_dicts): 
         for key, value in unit.items():
             for list in value: 
-                during_stim = list #[int(0.15/1.15*len(list)):int(0.65/1.15*len(list))]
+                during_stim = list[int(0.15/1.15*len(list)):int(0.65/1.15*len(list))]
                 if key not in dict: 
                     dict[key]  = []
                 if key[0] == "Right":           
@@ -78,7 +78,10 @@ def frequency_plot(data_dict, frequencies, title, save=False, suffix=""):
     ax.set_xlabel("Frequency (Hz)", fontsize=16)
     ax.set_ylabel(title, fontsize=16)
     ax.set_title("Boxplot by Frequency", fontsize=18)
-    ax.set_ylim(-55, 55)
+    ax.set_ylim(-75, 75)
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+
 
     # Add a legend for "Right" and "Left"
     ax.legend(
@@ -134,7 +137,9 @@ def frequency_plot_elytra(data_dict, frequencies, title, save=False, suffix=""):
     ax.set_xlabel("Frequency (Hz)", fontsize=16)
     ax.set_ylabel(title, fontsize=16)
     ax.set_title("Boxplot by Frequency", fontsize=18)
-    ax.set_ylim(-3, 30)
+    ax.set_ylim(-3, 80)
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
     ax.legend(
         handles=[
             plt.Line2D([0], [0], color="grey", lw=4, label="Both Elytra Stimulation")

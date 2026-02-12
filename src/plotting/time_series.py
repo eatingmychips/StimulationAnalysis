@@ -82,7 +82,8 @@ def antenna_time_plot(data_dict, frequencies, title, save = False, suffix = ""):
         # Formatting subplot
         ax.set_title(f'Freq: {freq} Hz', fontsize=18)
         ax.set_xlim(0, 1.1)
-        ax.set_ylim(-45, 45)
+        ax.set_ylim(-80, 80)
+        ax.axhline(y=0, color='black', linestyle='--', linewidth=1)
         ax.set_ylabel(title, fontsize=16)
         if freq == 10:
             ax.legend(fontsize=14)
@@ -108,7 +109,7 @@ def antenna_time_plot(data_dict, frequencies, title, save = False, suffix = ""):
         fname = f"antenna_time_plot{suffix}.png"
         fig.savefig(FIG_DIR / fname, dpi=300, bbox_inches="tight")
 
-    plt.show()
+
 
 
 
@@ -165,6 +166,7 @@ def elytra_time_plot(data_dict, frequencies, title, save=False, suffix=""):
         ax.set_title(f'Freq: {freq} Hz', fontsize=18)
         ax.set_xlim(0, 1.05)
         ax.set_ylabel(title, fontsize=16)
+        ax.axhline(y=0, color='black', linestyle='--', linewidth=1)
         if freq == 10:
             ax.legend(fontsize=14)
         
@@ -188,7 +190,7 @@ def elytra_time_plot(data_dict, frequencies, title, save=False, suffix=""):
     if save:
         fname = f"elytra_time_plot{suffix}.png"
         fig.savefig(FIG_DIR / fname, dpi=300, bbox_inches="tight")
-    plt.show()
+
 
 def antenna_time_plot_single(data_dict, frequency, title, save=False, suffix=""):
     fig, ax = plt.subplots(figsize=(9, 6), dpi=100)
@@ -265,7 +267,6 @@ def antenna_time_plot_single(data_dict, frequency, title, save=False, suffix="")
     if save:
         fname = f"antenna_time_plot_single{suffix}.png"
         fig.savefig(FIG_DIR / fname, dpi=300, bbox_inches="tight")
-    plt.show()
 
 
 def elytra_time_plot_single(data_dict, frequency, title, save=False, suffix=""):
@@ -315,9 +316,11 @@ def elytra_time_plot_single(data_dict, frequency, title, save=False, suffix=""):
     ax.set_ylabel(title, fontsize=21)
     ax.set_xlabel('Time (s)', fontsize=21)
     ax.legend(fontsize=14)
-
+    ax.set_ylim(-8, 33)
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
+
+    ax.axhline(y=0, color='black', linestyle='--', linewidth=1)
 
     # Set custom x-ticks and labels with increased font size
     xtick_positions = np.arange(0, 1.05, 0.2)
@@ -329,7 +332,7 @@ def elytra_time_plot_single(data_dict, frequency, title, save=False, suffix=""):
         fname = f"elytra_time_plot_single{suffix}.png"
         fig.savefig(FIG_DIR / fname, dpi=300, bbox_inches="tight")
     plt.tight_layout(h_pad=0.35)
-    plt.show()
+
 
 
 
@@ -391,7 +394,7 @@ def antenna_trials_plot(data_dict, frequencies, title, save=False, suffix=""):
     if save:
         fname = f"antenna_trials_plot{suffix}.png"
         fig.savefig(FIG_DIR / fname, dpi=300, bbox_inches="tight")
-    plt.show()
+
 
 
 def elytra_trials_plot(data_dict, frequencies, title, save=False, suffix=""):
@@ -447,4 +450,3 @@ def elytra_trials_plot(data_dict, frequencies, title, save=False, suffix=""):
     if save:
         fname = f"elytra_trials_plot{suffix}.png"
         fig.savefig(FIG_DIR / fname, dpi=300, bbox_inches="tight")
-    plt.show()
