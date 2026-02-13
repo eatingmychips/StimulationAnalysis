@@ -61,6 +61,6 @@ def main():
     elytra_time_plot(forward_velocity, FREQUENCIES, "Forward Velocity (mm/s)", save=True)
     elytra_trials_plot(forward_velocity, FREQUENCIES, "Forward Velocity (mm/s)", save=True)
     frequency_plot_elytra(fwd_max, FREQUENCIES, "Forward Velocity (mm/s)", save=True)
-
+    
 if __name__ == "__main__":
     main()

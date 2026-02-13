@@ -80,10 +80,15 @@ def trial_is_outlier(angles, fwd_vel, key):
     if np.isnan(angles).all(): 
         return True
     
+    if key[0] == "Both": 
+        if fwd_vel[-1] < 0: 
+            return True
+        
+
     return False
 
 def turning_fail(angles, key): 
-    duringstim = angles[int(0.15/1.15*len(angles)):int(0.65/1.15*len(angles))]
+    duringstim = angles[int(0.15/1.25*len(angles)):int(0.65/1.25*len(angles))]
 
     if key[0] == "Right": 
         if min(duringstim) > -2.5: 
@@ -103,13 +108,11 @@ def turning_fail(angles, key):
 
 
 def elytra_fail(fwd_vel, key): 
-    fwd_vel = fwd_vel[int(0.15/1.15*len(fwd_vel)):int(0.65/1.15*len(fwd_vel))]
+    fwd_vel = fwd_vel[int(0.15/1.25*len(fwd_vel)):int(0.65/1.25*len(fwd_vel))]
     if key[0] == "Both": 
         if max(fwd_vel) < 3: 
             return True 
         
-    if key[0] == "Both": 
-        if fwd_vel[-1] < 0: 
-            return True
+
         
     return False

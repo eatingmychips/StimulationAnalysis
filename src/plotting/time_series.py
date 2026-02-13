@@ -51,7 +51,7 @@ def antenna_time_plot(data_dict, frequencies, title, save = False, suffix = ""):
         if len(list1) < 1 and len(list2) < 1:
             # If no data at all for this frequency, just create empty plot
             ax.set_title(f'Freq: {freq} Hz (No Data)', fontsize=18)
-            ax.set_xlim(0, 1.15)
+            ax.set_xlim(0, 1.25)
             ax.set_ylabel(title, fontsize=16)
             ax.spines['right'].set_visible(False)
             ax.spines['top'].set_visible(False)
@@ -60,7 +60,7 @@ def antenna_time_plot(data_dict, frequencies, title, save = False, suffix = ""):
         # Only process and plot if data exists
         if len(list1) > 0:
             max_len1, medians1, lower_quartiles1, upper_quartiles1 = process_list(list1)
-            x1 = np.linspace(0, 1.15, max_len1)
+            x1 = np.linspace(0, 1.25, max_len1)
             mask1 = (x1 >= 0.15) & (x1 <= 0.65)
             ax.fill_between(x1, lower_quartiles1, upper_quartiles1, color='lightgrey', alpha=0.3)
             ax.plot(x1, medians1, color='black', linewidth=2)
@@ -69,7 +69,7 @@ def antenna_time_plot(data_dict, frequencies, title, save = False, suffix = ""):
 
         if len(list2) > 0:
             max_len2, medians2, lower_quartiles2, upper_quartiles2 = process_list(list2)
-            x2 = np.linspace(0, 1.15, max_len2)
+            x2 = np.linspace(0, 1.25, max_len2)
             mask2 = (x2 >= 0.15) & (x2 <= 0.65)
             ax.fill_between(x2, lower_quartiles2, upper_quartiles2, color='lightgrey', alpha=0.3)
             ax.plot(x2, medians2, color='black', linewidth=2)
@@ -150,7 +150,7 @@ def elytra_time_plot(data_dict, frequencies, title, save=False, suffix=""):
         if len(list1) > 0: 
             max_len1, medians1, lower_quartiles1, upper_quartiles1 = process_list(list1)
 
-            x = np.linspace(0, 1.15, max_len1)
+            x = np.linspace(0, 1.25, max_len1)
             mask = (x >= 0.1) & (x <= 0.6)
 
             # Right stimulation plot
@@ -215,7 +215,7 @@ def antenna_time_plot_single(data_dict, frequency, title, save=False, suffix="")
 
     if len(list1) == 0 and len(list2) == 0:
         ax.set_title(f'Freq: {frequency} Hz (No Data)', fontsize=18)
-        ax.set_xlim(0, 1.15)
+        ax.set_xlim(0, 1.25)
         ax.set_ylabel(title, fontsize=16)
         ax.spines['right'].set_visible(False)
         ax.spines['top'].set_visible(False)
@@ -225,7 +225,7 @@ def antenna_time_plot_single(data_dict, frequency, title, save=False, suffix="")
     max_len1, medians1, lower_quartiles1, upper_quartiles1 = process_list(list1)
     max_len2, medians2, lower_quartiles2, upper_quartiles2 = process_list(list2)
 
-    x = np.linspace(0, 1.15, max(max_len1, max_len2))
+    x = np.linspace(0, 1.25, max(max_len1, max_len2))
     mask = (x >= 0.15) & (x <= 0.65)
 
     # Right stimulation plot
@@ -299,7 +299,7 @@ def elytra_time_plot_single(data_dict, frequency, title, save=False, suffix=""):
 
     max_len1, medians1, lower_quartiles1, upper_quartiles1 = process_list(list1)
 
-    x = np.linspace(0, 1.15, max_len1)
+    x = np.linspace(0, 1.25, max_len1)
     mask = (x >= 0.1) & (x <= 0.6)
 
     # Both Elytra Stimulation plot
@@ -357,13 +357,13 @@ def antenna_trials_plot(data_dict, frequencies, title, save=False, suffix=""):
         # Plot all Right stimulation trials (red)
         for trial in list1:
             trial = np.array(trial)
-            x = np.linspace(0, 1.15, len(trial))
+            x = np.linspace(0, 1.25, len(trial))
             ax.plot(x, trial, color='red', alpha=0.5, linewidth=1, label='Right Stimulation' if 'Right Stimulation' not in ax.get_legend_handles_labels()[1] else "")
 
         # Plot all Left stimulation trials (green)
         for trial in list2:
             trial = np.array(trial)
-            x = np.linspace(0, 1.15, len(trial))
+            x = np.linspace(0, 1.25, len(trial))
             ax.plot(x, trial, color='green', alpha=0.5, linewidth=1, label='Left Stimulation' if 'Left Stimulation' not in ax.get_legend_handles_labels()[1] else "")
 
         # Formatting subplot
@@ -417,7 +417,7 @@ def elytra_trials_plot(data_dict, frequencies, title, save=False, suffix=""):
         # Plot all Both Elytra stimulation trials (blue)
         for trial in list1:
             trial = np.array(trial)
-            x = np.linspace(0, 1.15, len(trial))
+            x = np.linspace(0, 1.25, len(trial))
             # Only add label to the first line for the legend
             ax.plot(x, trial, color='blue', alpha=0.5, linewidth=1,
                     label='Both Elytra Stimulation' if 'Both Elytra Stimulation' not in ax.get_legend_handles_labels()[1] else "")
