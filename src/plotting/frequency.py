@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np 
 from pathlib import Path 
-
+from scipy import stats
 
 FIG_DIR = Path(__file__).resolve().parents[2] / "outputs" / "figures"
 FIG_DIR.mkdir(parents=True, exist_ok=True)
@@ -78,7 +78,7 @@ def frequency_plot(data_dict, frequencies, title, save=False, suffix=""):
     ax.set_xlabel("Frequency (Hz)", fontsize=16)
     ax.set_ylabel(title, fontsize=16)
     ax.set_title("Boxplot by Frequency", fontsize=18)
-    ax.set_ylim(-75, 75)
+    # ax.set_ylim(-75, 75)
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
 
@@ -111,8 +111,6 @@ def frequency_plot_elytra(data_dict, frequencies, title, save=False, suffix=""):
 
     for freq in frequencies:
         list1 = data_dict.get(("Both", freq), [])
-        if freq == 10: 
-            print(np.percentile(list1, 10))
         if len(list1) > 0:
             box_data.append(list1)
             positions.append(freq)
@@ -209,3 +207,267 @@ def frequency_scatter_regression(data_dict, frequencies, title):
     ax.legend(title="Side", loc="upper right", fontsize=12)
     plt.tight_layout()
     plt.show()
+
+def all_roach_mean_std_plot(
+    angles_dict_all,
+    results,
+    frequencies,
+    direction, 
+    title="Average angular velocity (deg/s)",
+    save=False,
+    suffix="",
+):
+    """
+    angles_dict_all: dict[(direction, freq)] -> sequence of values, pooled across roaches
+    results: dict[roach_id]["angles_max"] with same key structure
+    frequencies: iterable of frequencies
+    """
+
+    fig, ax = plt.subplots(figsize=(9, 6), dpi=300)
+
+    directions = ["Right", "Left"]
+    dir_colors = {"Right": "black", "Left": "black"}
+
+    freqs = list(frequencies)
+    alpha = 0.10  # 90% CI
+    # ---------- 1) ALL-FILES MEAN ± SD (with error bars) ----------
+
+    x = []
+    means = []
+    ci_halfwidth = []
+
+    for freq in freqs:
+        vals = np.asarray(angles_dict_all.get((direction, freq), []), dtype=float)
+        n = vals.size
+        if n == 0:
+            continue
+
+        vals = [np.abs(x) for x in vals]        
+        mean = np.mean(vals)
+        stddev = np.std(vals, ddof=1)      # sample SD
+        sem = stddev / np.sqrt(n)          # SEM
+
+        # t critical value for 90% CI, two-sided, df = n-1
+        t_crit = stats.t.ppf(1 - alpha/2, df=n - 1)
+
+        margin = t_crit * sem              # half-width of CI
+
+        x.append(freq)
+        means.append(mean)
+        ci_halfwidth.append(margin)
+
+    x = np.array(x)
+    means = np.array(means)
+    stds = np.array(ci_halfwidth)
+
+    ax.errorbar(
+        x,
+        means,
+        yerr=stds,
+        fmt="o-",
+        color=dir_colors[direction],
+        linewidth=3,
+        elinewidth=2,
+        capsize=5,
+        label=f"All {direction}",
+    )
+
+    # ---------- 2) INDIVIDUAL ROACHES: LINES ONLY ----------
+    roach_colors = plt.cm.tab10.colors
+    roach_ids = list(results.keys())
+
+    for r_idx, roach_id in enumerate(roach_ids):
+        r_color = roach_colors[r_idx % len(roach_colors)]
+        r_data = results[roach_id]["angles_max"]
+
+
+        means = []
+        x = []
+
+        for freq in freqs:
+            vals = np.asarray(r_data.get((direction, freq), []), dtype=float)
+            if vals.size == 0:
+                continue
+            x.append(freq)
+            vals = [np.abs(x) for x in vals]
+            means.append(np.mean(vals))
+
+        if not x:
+            continue
+
+        x = np.array(x)
+        means = np.array(means)
+
+        ax.plot(
+            x,
+            means,
+            "--",
+            color=r_color,
+            linewidth=1.5,
+            label=f"{roach_id} {direction}",
+        )
+
+    # ---------- 3) AXIS / STYLING ----------
+    # ax.axhline(y=0, color="black", linestyle="--", linewidth=2)
+
+    ax.set_xticks(freqs)
+    ax.set_xticklabels(freqs, fontsize=19)
+    ax.set_xlabel("Stimulation frequency (Hz)", fontsize=21)
+    ax.set_ylabel(title, fontsize=21)
+    # ax.set_title("Mean vs frequency (All ± SD, individuals lines)", fontsize=18)
+    ax.set_ylim(0, 100)
+    ax.spines["right"].set_visible(False)
+    ax.spines["top"].set_visible(False)
+    ax.tick_params(axis='both', which='major', labelsize=19)
+    ax.grid(True, axis="y", alpha=0.3)
+
+    # Deduplicate legend
+    handles, labels = ax.get_legend_handles_labels()
+    uniq = dict(zip(labels, handles))
+    ax.legend(
+        uniq.values(),
+        uniq.keys(),
+        fontsize=16,
+        loc="upper left"
+    )
+
+    plt.tight_layout()
+    if save:
+        fname = f"Individual_Roach{suffix}.png"
+        fig.savefig(FIG_DIR / fname, dpi=300, bbox_inches="tight")
+    else:
+        plt.show()
+    plt.close(fig)
+
+
+
+def all_roach_cerci_plot(
+    fwd_vel_all,
+    results,
+    frequencies,
+    direction, 
+    title="Average angular velocity (deg/s)",
+    save=False,
+    suffix="",
+    ):
+    """
+    angles_dict_all: dict[(direction, freq)] -> sequence of values, pooled across roaches
+    results: dict[roach_id]["angles_max"] with same key structure
+    frequencies: iterable of frequencies
+    """
+
+    fig, ax = plt.subplots(figsize=(9, 6))
+
+    directions = ["Both"]
+    dir_colors = {"Both": "black"}
+
+    freqs = list(frequencies)
+    alpha = 0.10  # 90% CI
+    # ---------- 1) ALL-FILES MEAN ± SD (with error bars) ----------
+
+    x = []
+    means = []
+    ci_halfwidth = []
+
+    for freq in freqs:
+        vals = np.asarray(fwd_vel_all.get((direction, freq), []), dtype=float)
+        n = vals.size
+        if n == 0:
+            continue
+
+        vals = [np.abs(x) for x in vals]        
+        mean = np.mean(vals)
+        stddev = np.std(vals, ddof=1)      # sample SD
+        sem = stddev / np.sqrt(n)          # SEM
+
+        # t critical value for 90% CI, two-sided, df = n-1
+        t_crit = stats.t.ppf(1 - alpha/2, df=n - 1)
+
+        margin = t_crit * sem              # half-width of CI
+
+        x.append(freq)
+        means.append(mean)
+        ci_halfwidth.append(margin)
+
+    x = np.array(x)
+    means = np.array(means)
+    stds = np.array(ci_halfwidth)
+
+    ax.errorbar(
+        x,
+        means,
+        yerr=stds,
+        fmt="o-",
+        color=dir_colors[direction],
+        linewidth=3,
+        elinewidth=2,
+        capsize=5,
+        label=f"All {direction}",
+    )
+
+    # ---------- 2) INDIVIDUAL ROACHES: LINES ONLY ----------
+    roach_colors = plt.cm.tab10.colors
+    roach_ids = list(results.keys())
+
+    for r_idx, roach_id in enumerate(roach_ids):
+        r_color = roach_colors[r_idx % len(roach_colors)]
+        r_data = results[roach_id]["fwd_max"]
+
+
+        means = []
+        x = []
+
+        for freq in freqs:
+            vals = np.asarray(r_data.get((direction, freq), []), dtype=float)
+            if vals.size == 0:
+                continue
+            x.append(freq)
+            vals = [np.abs(x) for x in vals]
+            means.append(np.mean(vals))
+
+        if not x:
+            continue
+
+        x = np.array(x)
+        means = np.array(means)
+
+        ax.plot(
+            x,
+            means,
+            "--",
+            color=r_color,
+            linewidth=1.5,
+            label=f"{roach_id} {direction}",
+        )
+
+    # ---------- 3) AXIS / STYLING ----------
+    # ax.axhline(y=0, color="black", linestyle="--", linewidth=2)
+
+    ax.set_xticks(freqs)
+    ax.set_xticklabels(freqs, fontsize=19)
+    ax.set_xlabel("Stimulation frequency (Hz)", fontsize=21)
+    ax.set_ylabel(title, fontsize=21)
+    # ax.set_title("Mean vs frequency (All ± SD, individuals lines)", fontsize=18)
+    ax.set_ylim(0, 60)
+    ax.spines["right"].set_visible(False)
+    ax.spines["top"].set_visible(False)
+    ax.tick_params(axis='both', which='major', labelsize=19)
+    ax.grid(True, axis="y", alpha=0.3)
+
+    # Deduplicate legend
+    handles, labels = ax.get_legend_handles_labels()
+    uniq = dict(zip(labels, handles))
+    ax.legend(
+        uniq.values(),
+        uniq.keys(),
+        fontsize=16,
+        loc="upper left"
+    )
+
+    plt.tight_layout()
+    if save:
+        fname = f"Individual_Roach_cerci{suffix}.png"
+        fig.savefig(FIG_DIR / fname, dpi=300, bbox_inches="tight")
+    else:
+        plt.show()
+    plt.close(fig)
