@@ -39,14 +39,6 @@ def file_read(file):
             # If not, then append the stimulation information
             # print(file)
             try:
-                # direction = j[0]
-                # number = j[1:]
-                # if direction == 'E': 
-                #     direction = 'Both'
-                # elif direction == 'A': 
-                #     direction = 'Left'
-                # elif direction == 'B': 
-                #     direction ='Right'
                 direction, number = j.split(", ")
                 freq = int(number[:2])
                 freq = int(number)

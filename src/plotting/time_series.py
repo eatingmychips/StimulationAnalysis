@@ -44,8 +44,8 @@ def antenna_time_plot(data_dict, frequencies, title, save = False, suffix = ""):
 
         
         # Use .get() with default empty list if key not found
-        list1 = data_dict.get(("Right", freq), [])
-        list2 = data_dict.get(("Left", freq), [])
+        list1 = data_dict.get(("RightEly", freq), [])
+        list2 = data_dict.get(("LeftEly", freq), [])
 
 
         if len(list1) < 1 and len(list2) < 1:
@@ -210,8 +210,8 @@ def antenna_time_plot_single(data_dict, frequency, title, save=False, suffix="")
 
     
     # Use .get() with default empty list if key not found
-    list1 = data_dict.get(("Right", frequency), [])
-    list2 = data_dict.get(("Left", frequency), [])
+    list1 = data_dict.get(("RightEly", frequency), [])
+    list2 = data_dict.get(("LeftEly", frequency), [])
 
     if len(list1) == 0 and len(list2) == 0:
         ax.set_title(f'Freq: {frequency} Hz (No Data)', fontsize=18)
@@ -343,8 +343,8 @@ def antenna_trials_plot(data_dict, frequencies, title, save=False, suffix=""):
     for idx, freq in enumerate(frequencies):
         ax = axes_flat[idx]
         # Get data for each frequency and side
-        list1 = data_dict.get(("Right", freq), [])
-        list2 = data_dict.get(("Left", freq), [])
+        list1 = data_dict.get(("RightEly", freq), [])
+        list2 = data_dict.get(("LeftEly", freq), [])
 
         if len(list1) == 0 and len(list2) == 0:
             ax.set_title(f'Freq: {freq} Hz (No Data)', fontsize=18)

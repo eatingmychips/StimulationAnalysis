@@ -28,15 +28,16 @@ def get_max_values(lateral_vel, fwd_vel, body_angle, ang_vel):
                 during_stim = list[int(0.15/1.15*len(list)):int(0.65/1.15*len(list))]
                 if key not in dict: 
                     dict[key]  = []
-                if key[0] == "Right":           
-                    dict[key].append(min(during_stim)) 
-                elif key[0] == "Left": 
-                    dict[key].append(max(during_stim))
-                elif key[0] == "Both":
-                    if dict is fwd_vel_max:
-                        dict[key].append(abs(max(during_stim)))
+                if key[0] == "RightEly":
+                    if dict is fwd_vel_max: 
+                        dict[key].append(abs(max(during_stim)))           
                     else:
-                        dict[key].append(max(during_stim, key=abs))
+                        dict[key].append(min(during_stim)) 
+                elif key[0] == "LeftEly":
+                    if dict is fwd_vel_max: 
+                        dict[key].append(abs(max(during_stim)))
+                    else: 
+                        dict[key].append(max(during_stim))
 
     return lateral_max, fwd_vel_max, body_angle_max, ang_vel_max
 
@@ -53,8 +54,8 @@ def frequency_plot(data_dict, frequencies, title, save=False, suffix=""):
     # Iterate through frequencies and collect data
     for idx, freq in enumerate(frequencies):
 
-        list1 = data_dict.get(("Right", freq), [])
-        list2 = data_dict.get(("Left", freq), [])
+        list1 = data_dict.get(("RightEly", freq), [])
+        list2 = data_dict.get(("LeftEly", freq), [])
         if len(list1) > 0:  # Add "Right" data if available
             box_data.append(list1)
             positions.append(freq)  # X-axis position corresponds to frequency

@@ -33,7 +33,7 @@ def body_vel(pos, angles, fps):
         in_line_velocity = np.dot(delta, body_axis_unit)
         transverse_velocity = np.dot(delta, perp_body_axis_unit)
 
-        pixels_per_mm = 4.1033
+        pixels_per_mm = 2.748
         scale_factor = fps/pixels_per_mm
         body_v_in_line.append(in_line_velocity * scale_factor)
         body_v_transverse.append(transverse_velocity * scale_factor)

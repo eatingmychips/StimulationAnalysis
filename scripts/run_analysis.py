@@ -6,8 +6,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1] 
 sys.path.append(str(PROJECT_ROOT))
 
-from src.config import VERTICAL_DATA_DIR, FREQUENCIES
-from src.config import VERTICAL_DATA_DIR, FREQUENCIES
+from src.config import FREQUENCIES, DATA_RAW
 from src.stats_pipeline import load_files, run_stat_analysis
 from src.plotting.time_series import (
     antenna_time_plot,
@@ -25,19 +24,15 @@ from src.plotting.frequency import (
 
 
 def main():
-    files = load_files(VERTICAL_DATA_DIR)
+    files = load_files(DATA_RAW)
     lateral_velocity, forward_velocity, body_angles, angular_velocity, summary = run_stat_analysis(files)
 
     # Save max values (your existing JSON writes)
     outputs_dir = Path("outputs/json")
     outputs_dir.mkdir(parents=True, exist_ok=True)
 
-
-    print("Number of Turning trials is: ", summary["turning_succ_no"])
-    print("Success Turning is: ", summary["turning_succ_no"] / (summary["turning_succ_no"] + summary["turning_fail_no"]))
-
-    print("Number of forward trials is: ", summary["elytra_succ_no"])
-    print("Success Forward is: ", summary["elytra_succ_no"] / (summary["elytra_succ_no"] + summary["elytra_fail_no"]))
+    print("Number of Elytra trials is: ", summary["elytra_succ_no"])
+    print("Success Elytra is: ", summary["elytra_succ_no"] / (summary["elytra_succ_no"] + summary["elytra_fail_no"]))
 
 
     lateral_max, fwd_max, angles_max, ang_vel_max = get_max_values(
@@ -50,17 +45,14 @@ def main():
     with open(outputs_dir / "fwd_max_vert_Acrylic.json", "w") as f:
         json.dump({str(k): v for k, v in fwd_max.items()}, f)
 
-    # Antenna plots
-    antenna_time_plot_single(body_angles, 20, "Angular Deviation (degrees)", save=True)
-    antenna_time_plot(body_angles, FREQUENCIES, "Angular Deviation (degrees)", save=True)
-    antenna_trials_plot(body_angles, FREQUENCIES, "Angular Deviation (degrees)", save=True)
-    frequency_plot(angles_max, FREQUENCIES, "Angular Deviation (degrees)", save=True)
+    # These are actually Elytra Time but we use antenna functions to get left / right functionality 
+    antenna_time_plot_single(lateral_velocity, 20, "Lateral Velocity (mm / s)", save=True)
+    antenna_time_plot(lateral_velocity, FREQUENCIES, "Lateral Velocity (mm / s)", save=True)
+    antenna_trials_plot(lateral_velocity, FREQUENCIES, "Lateral Velocity (mm / s)", save=True)
+    frequency_plot(lateral_max, FREQUENCIES, "Lateral Velocity (mm / s)", save=True)
 
-    # Elytra plots
-    elytra_time_plot_single(forward_velocity, 20, "Forward Velocity (mm/s)", save=True)
-    elytra_time_plot(forward_velocity, FREQUENCIES, "Forward Velocity (mm/s)", save=True)
-    elytra_trials_plot(forward_velocity, FREQUENCIES, "Forward Velocity (mm/s)", save=True)
-    frequency_plot_elytra(fwd_max, FREQUENCIES, "Forward Velocity (mm/s)", save=True)
+    # antenna_time_plot_forward(forward_velocity, FREQUENCIES, "Forward Velocity (mm / s)", save=True)
+
     
 if __name__ == "__main__":
     main()
